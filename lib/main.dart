@@ -1,9 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
+import 'dart:async';
+
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 
 
-void main() {
+
+void main() async {
   runApp(MyApp());
+
+  final Future<Database> database = openDatabase(
+      // Set the path to the database.
+      join(await getDatabasesPath(), 'passport_database.db'),
+      onCreate: (db, version) {
+    return db.execute(
+      "CREATE TABLE passport(id INTEGER PRIMARY KEY, name TEXT, age INTEGER)",
+    );
+  },
+  // Set the version. This executes the onCreate function and provides a
+  // path to perform database upgrades and downgrades.
+  version: 1,
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -208,7 +226,6 @@ class _MyHomePageState extends State<MyHomePage> {
       _counter++;
     });
   }
-
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -261,3 +278,19 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+class Passport {
+    final int id;
+    final String name;
+    final int age;
+
+     Passport({this.id, this.name, this.age});
+
+     Map<String, dynamic> toMap() {
+       return {
+         'id' : id,
+         'name' : name,
+         'age' : age,
+       };
+    }
+  }
