@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
 import 'dart:async';
 
+import 'package:flutter/widgets.dart';
+
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -55,6 +57,40 @@ void main() async {
     });
   }
   print(await passport());
+
+
+  Future<void> updatePassport(Passport passport) async {
+    final db = await database;
+
+    await db.update(
+      'passport',
+      passport.toMap(),
+      where: 'id = ?',
+      whereArgs: [passport.id],
+
+//  Note:
+//  Always use whereArgs to pass arguments to a where statement.
+//  This helps safeguard against SQL injection attacks.
+//  Do not use string interpolation, such as where: "id = ${dog.id}"!
+    );
+  }
+  await updatePassport(Passport(
+    id: 0,
+    name: 'Jake',
+    age: 222,
+  ));
+
+  print(await passport());
+
+  Future<void> deletePassport(int id) async {
+    final db = await database;
+
+    await db.delete(
+      'passport',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
 }
 
 class Passport {
