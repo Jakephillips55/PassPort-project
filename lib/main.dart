@@ -41,6 +41,20 @@ void main() async {
 
   await insertPassport(jake);
 
+  Future<List<Passport>> passport() async {
+    final Database db = await database;
+
+    final List<Map<String, dynamic>> maps = await db.query('passport_database');
+
+  return List.generate(maps.length, (i) {
+    return Passport(
+      id: maps[i]['id'],
+      name: maps[i]['name'],
+      age: maps[i]['age'],
+      );
+    });
+  }
+  print(await passport());
 }
 
 class Passport {
@@ -313,19 +327,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-//
-//class Passport {
-//  final int id;
-//  final String name;
-//  final int age;
-//
-//  Passport({this.id, this.name, this.age});
-//
-//  Map<String, dynamic> toMap() {
-//    return {
-//      'id': id,
-//      'name': name,
-//      'age': age,
-//    };
-//  }
-//}
