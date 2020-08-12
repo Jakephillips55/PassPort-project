@@ -22,6 +22,41 @@ void main() async {
   // path to perform database upgrades and downgrades.
   version: 1,
   );
+
+  Future<void> insertPassport(Passport passport) async {
+    final Database db = await database;
+
+    await db.insert(
+        'passport_database',
+        passport.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace
+    );
+  }
+
+  final jake = Passport(
+    id: 1,
+    name: 'Jake',
+    age: 22,
+  );
+
+  await insertPassport(jake);
+
+}
+
+class Passport {
+  final int id;
+  final String name;
+  final int age;
+
+  Passport({this.id, this.name, this.age});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'age': age,
+    };
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -278,19 +313,19 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
-class Passport {
-    final int id;
-    final String name;
-    final int age;
-
-     Passport({this.id, this.name, this.age});
-
-     Map<String, dynamic> toMap() {
-       return {
-         'id' : id,
-         'name' : name,
-         'age' : age,
-       };
-    }
-  }
+//
+//class Passport {
+//  final int id;
+//  final String name;
+//  final int age;
+//
+//  Passport({this.id, this.name, this.age});
+//
+//  Map<String, dynamic> toMap() {
+//    return {
+//      'id': id,
+//      'name': name,
+//      'age': age,
+//    };
+//  }
+//}
